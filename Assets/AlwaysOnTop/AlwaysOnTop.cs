@@ -1,13 +1,15 @@
+// https://forum.unity.com/threads/solved-how-to-set-windowed-game-to-be-always-on-top-in-c.328040/
+// (c) asperatology
+
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
  
 using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
+//using System.Drawing;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
- 
  
 public class AlwaysOnTop : MonoBehaviour {
     #region WIN32API
@@ -15,7 +17,7 @@ public class AlwaysOnTop : MonoBehaviour {
     public static readonly System.IntPtr HWND_TOPMOST = new System.IntPtr(-1);
     public static readonly System.IntPtr HWND_NOT_TOPMOST = new System.IntPtr(-2);
     const System.UInt32 SWP_SHOWWINDOW = 0x0040;
- 
+
     [StructLayout(LayoutKind.Sequential)]
     public struct RECT {
         public int Left, Top, Right, Bottom;
@@ -27,9 +29,11 @@ public class AlwaysOnTop : MonoBehaviour {
             Bottom = bottom;
         }
  
+        /*
         public RECT(System.Drawing.Rectangle r)
             : this(r.Left, r.Top, r.Right, r.Bottom) {
         }
+        */
  
         public int X {
             get {
@@ -69,6 +73,7 @@ public class AlwaysOnTop : MonoBehaviour {
             }
         }
  
+        /*
         public static implicit operator System.Drawing.Rectangle(RECT r) {
             return new System.Drawing.Rectangle(r.Left, r.Top, r.Width, r.Height);
         }
@@ -76,6 +81,7 @@ public class AlwaysOnTop : MonoBehaviour {
         public static implicit operator RECT(System.Drawing.Rectangle r) {
             return new RECT(r);
         }
+        */
     }
  
     [DllImport("user32.dll", SetLastError = true)]
@@ -94,7 +100,7 @@ public class AlwaysOnTop : MonoBehaviour {
  
     // Use this for initialization
     void Start() {
-        AssignTopmostWindow(CONSTANT_WINDOW_TITLE_FROM_GAME, true);
+        AssignTopmostWindow("Talking Icon", true);
     }
  
     public bool AssignTopmostWindow(string WindowTitle, bool MakeTopmost) {
@@ -135,3 +141,4 @@ public class AlwaysOnTop : MonoBehaviour {
 }
 #endif
  
+
