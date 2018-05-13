@@ -14,7 +14,8 @@ public class AnimMorphTarget : MonoBehaviour {
     public float frameRate = 12.0f;
 
     [Tooltip("BlendShapeの値を変化させるSkinnedMeshRenderer")]
-    public SkinnedMeshRenderer skinnedMeshRenderer;
+    //public SkinnedMeshRenderer skinnedMeshRenderer;
+    public BlendWeightReciever blendWeightReciever;
 
     [Tooltip("aa, E, ih, oh, ouの順で割り当てるBlendShapeのindex")]
     public int[] visemeToBlendShape = new int[5];
@@ -28,7 +29,7 @@ public class AnimMorphTarget : MonoBehaviour {
     float frameRateTimer = 0.0f;
 
     void Start() {
-        if (skinnedMeshRenderer == null) {
+        if (blendWeightReciever == null) {
             Debug.LogError("SkinnedMeshRendererが指定されていません。", this);
         }
 
@@ -41,7 +42,7 @@ public class AnimMorphTarget : MonoBehaviour {
     }
 
     void Update() {
-        if (context == null || skinnedMeshRenderer == null) {
+        if (context == null || blendWeightReciever == null) {
             return;
         }
 
@@ -63,7 +64,7 @@ public class AnimMorphTarget : MonoBehaviour {
                 continue;
             }
 
-            skinnedMeshRenderer.SetBlendShapeWeight(blendShape, 0.0f);
+            blendWeightReciever.Reset(blendShape);
         }
 
         // 最大の重みを持つ音素を探す
@@ -91,6 +92,6 @@ public class AnimMorphTarget : MonoBehaviour {
         }
 
         var visemeIndex = maxVisemeIndex - (int)OVRLipSync.Viseme.aa;
-        skinnedMeshRenderer.SetBlendShapeWeight(visemeToBlendShape[visemeIndex], transitionCurves[visemeIndex].Evaluate(transitionTimer) * curveAmplifier);
+        blendWeightReciever.SetBlendShapeWeight(visemeToBlendShape[visemeIndex], transitionCurves[visemeIndex].Evaluate(transitionTimer) * curveAmplifier);
     }
 }
